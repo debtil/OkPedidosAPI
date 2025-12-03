@@ -9,20 +9,22 @@ services:
     environment:
         - ASPNETCORE_URLS=http://+:80
         - ASPNETCORE_ENVIRONMENT=Development
-        - ConnectionStrings__DefaultConnection=Host=postgreserver;username=postgres;password=fogoetempero2025;database=OkPedidosDb; TrustServerCertificate=true
+        - ConnectionStrings__DefaultConnection=${DEFAULT_CONNECTION}
     depends_on:
         - postgreserver
+    restart: unless-stopped 
  
   postgreserver:
     image: postgres:16
     environment:
-        POSTGRES_DB: OkPedidosDb
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: fogoetempero2025
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
         - "5432:5432"
     volumes:
         - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped 
 networks:
   default:
     name: my_custom_network

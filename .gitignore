@@ -368,3 +368,5 @@ OkPedidosAPI/appsettings.Development.json
 OkPedidosAPI/appsettings.*.local.json
 OkPedidosAPI/appsettings.Local.json
 
+
+.env
