@@ -1,0 +1,5 @@
+Add-Migration AdicionaCompany -Context OkPedidosDbContext -StartupProject OkPedidosAPI -Project OkPedidos.Core
+
+docker compose up --build
+
+docker compose down -v

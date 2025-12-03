@@ -1,0 +1,31 @@
+services:
+  okPedidosApi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: okpedidosapi_postgresql_v1
+    ports: 
+        - "5003:80"
+    environment:
+        - ASPNETCORE_URLS=http://+:80
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ConnectionStrings__DefaultConnection=Host=postgreserver;username=postgres;password=fogoetempero2025;database=OkPedidosDb; TrustServerCertificate=true
+    depends_on:
+        - postgreserver
+ 
+  postgreserver:
+    image: postgres:16
+    environment:
+        POSTGRES_DB: OkPedidosDb
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: fogoetempero2025
+    ports:
+        - "5432:5432"
+    volumes:
+        - pgdata:/var/lib/postgresql/data
+networks:
+  default:
+    name: my_custom_network
+
+volumes:
+    pgdata:    
