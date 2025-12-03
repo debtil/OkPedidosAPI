@@ -362,7 +362,9 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Environment-specific settings (do NOT commit secrets)
-appsettings.Development.json
-appsettings.*.local.json
-appsettings.Local.json
+# Configurações locais - não versionar
+OkPedidosAPI/appsettings.json
+OkPedidosAPI/appsettings.Development.json
+OkPedidosAPI/appsettings.*.local.json
+OkPedidosAPI/appsettings.Local.json
+
