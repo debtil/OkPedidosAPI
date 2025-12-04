@@ -25,16 +25,21 @@ var app = builder.Build();
 MigrationService.InitializeMigration(app);
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.MapOpenApi(); // Enable OpenAPI endpoints
+app.UseSwagger();  // Enable Swagger UI
+app.UseSwaggerUI(c =>
 {
-    app.MapOpenApi();
-}
+    // Define Swagger UI options and the endpoint for Swagger JSON
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "OkPedidos API v1");
+});
+
+// Redirect root to Swagger UI if requested from `/`
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-};
+    app.UseHttpsRedirection();
+}
 
 app.UseHttpsRedirection();
 
