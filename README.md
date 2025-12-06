@@ -32,7 +32,9 @@ roda via **Docker**.
 A aplicação conecta-se a um PostgreSQL.
 Adicione no arquivo .env:
 
-``ConnectionStrings__DefaultConnection=Host=seu_host;Port=5432;Database=okpedidosdb;Username=okpedidosdb_user;Password=your_password``
+```env
+ConnectionStrings__DefaultConnection=Host=seu_host;Port=5432;Database=okpedidosdb;Username=okpedidosdb_user;Password=your_password
+```
 
 Certifique-se de adicionar corretamente as variáveis de ambiente no
 sistema onde a API será executada.
@@ -43,7 +45,9 @@ sistema onde a API será executada.
 
 Clonando o Repositório
 
-``git clone https://github.com/debtil/OkPedidosAPI.git``
+```bash
+git clone https://github.com/debtil/OkPedidosAPI.git
+```
 
 **Criando o Arquivo .env**
 
@@ -56,7 +60,9 @@ usada pelo banco de dados.
 
 Para rodar a aplicação com Docker:
 
-``docker-compose up``
+```bash
+docker-compose up
+```
 
 Isso iniciará os serviços necessários e exporá a API na porta 5003.
 
@@ -66,12 +72,18 @@ Isso iniciará os serviços necessários e exporá a API na porta 5003.
 
 **Rodando Docker com Build**
 
-``docker-compose up –build``
+```bash
+docker-compose up –build
+```
 
 **Rodando Migrações**
 
-``dotnet ef migrations add InitialCreate``
-``dotnet ef database update``
+```bash
+dotnet ef migrations add InitialCreate
+```
+```bash
+dotnet ef database update
+```
 
 **Acessando Localmente**
 
