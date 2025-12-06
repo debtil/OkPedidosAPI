@@ -5,5 +5,7 @@
         public static readonly MessageDetail RecordNotFound = new("ER-001", "Record not found.");
         public static readonly MessageDetail UnsupportedTypeForBetweenOperator = new("ER-002", "Unsupported Type For Between Operator");
         public static readonly MessageDetail InvalidFormatForBetweenOperator = new("Er-003", "InvalidFormat For Between Operator");
+        public static readonly MessageDetail CompanyNotFound = new("ER-004", "Company not found.");
+        public static readonly MessageDetail RecordAlreadyExists = new("ER-005", "The record already exists.");
     }
 }

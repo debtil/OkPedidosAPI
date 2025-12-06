@@ -17,12 +17,38 @@ namespace OkPedidos.Core.Services.User
         {
             try
             {
-                UserModel user = request;
-                user.CreatedAt = DateTime.Now;
-                await _dbContext.User.AddAsync(user);
+                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt != null);
+                if (companyId == null)
+                    return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.CompanyNotFound);
+
+                UserModel user = await _dbContext.User.FirstOrDefaultAsync(x => x.Email == request.Email && x.Name == request.Name);
+                
+                if(user != null && user.DeletedAt == null)
+                    return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.RecordAlreadyExists);
+
+                UserModel item = request;
+
+                if(user?.DeletedAt != null)
+                {
+                    item.Id = user.Id;
+                    item.Name = user.Name;
+                    item.Email = user.Email;
+                    item.Role = user.Role;
+                    item.Password = user.Password;
+                    item.UpdatedAt = DateTime.UtcNow;
+                    item.DeletedAt = null;
+
+                    _dbContext.User.Update(item);
+                }
+                else
+                {
+                    item.CreatedAt = DateTime.Now;
+                    await _dbContext.User.AddAsync(item);
+                }
+
                 await _dbContext.SaveChangesAsync();
 
-                CreateUserResponse response = user;
+                CreateUserResponse response = item;
                 return ResultService.OK(HttpStatusCode.Created, response, InfoMessages.RecordCreatedSuccessful);
             }
             catch (Exception ex)
@@ -38,6 +64,10 @@ namespace OkPedidos.Core.Services.User
                 var user = await _dbContext.User.FirstOrDefaultAsync(x => x.Id == id);
                 if (user == null)
                     return ResultService.NotFound<CreateUserResponse>();
+
+                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt != null);
+                if (companyId == null)
+                    return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.CompanyNotFound);
 
                 user.Name = request.Name;
                 user.Email = request.Email;

@@ -74,7 +74,7 @@ namespace OkPedidosAPI.Controllers
         }
 
         /// <summary>Busca os funcionários de uma empresa</summary>
-        [HttpGet("employees")]
+        [HttpGet("{id:int}/employees")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result<CreateCompanyResponse>))]
         public async Task<IActionResult> Emplyees(int id)
         {
