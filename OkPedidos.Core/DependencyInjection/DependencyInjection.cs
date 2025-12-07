@@ -11,6 +11,7 @@ namespace OkPedidos.Core.DependencyInjection
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<LoginService>();
 
             return services;
         }

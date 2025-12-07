@@ -11,7 +11,7 @@ namespace OkPedidosAPI.Controllers
     [ApiController]
     //[ApiExplorerSettings(GroupName = "admin")]
     [Route("admin/v1/users")]
-    //[Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.MANAGER)}")]
+    [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.MANAGER)}")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
