@@ -17,7 +17,7 @@ namespace OkPedidos.Core.Services.User
         {
             try
             {
-                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt != null);
+                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt == null);
                 if (companyId == null)
                     return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.CompanyNotFound);
 
@@ -63,9 +63,9 @@ namespace OkPedidos.Core.Services.User
             {
                 var user = await _dbContext.User.FirstOrDefaultAsync(x => x.Id == id);
                 if (user == null)
-                    return ResultService.NotFound<CreateUserResponse>();
+                    return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.UserNotFound);
 
-                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt != null);
+                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt == null);
                 if (companyId == null)
                     return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.CompanyNotFound);
 
@@ -95,7 +95,7 @@ namespace OkPedidos.Core.Services.User
             {
                 var user = await _dbContext.User.FirstOrDefaultAsync(x => x.Id == id);
                 if (user == null)
-                    return ResultService.NotFound<CreateUserResponse>();
+                    return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.UserNotFound);
 
                 user.DeletedAt = DateTime.Now;
                 _dbContext.User.Update(user);
@@ -123,9 +123,9 @@ namespace OkPedidos.Core.Services.User
                      .FirstOrDefaultAsync();
 
                  if (item is null)
-                     return ResultService.NotFound<CreateUserResponse>();
+                    return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.UserNotFound);
 
-                 CreateUserResponse response = item;
+                CreateUserResponse response = item;
 
                  return ResultService.OK(HttpStatusCode.OK, response, InfoMessages.OperationSuccessful);
             }
