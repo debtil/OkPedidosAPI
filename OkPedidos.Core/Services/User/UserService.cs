@@ -17,7 +17,7 @@ namespace OkPedidos.Core.Services.User
         {
             try
             {
-                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt != null);
+                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt == null);
                 if (companyId == null)
                     return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.CompanyNotFound);
 
@@ -65,7 +65,7 @@ namespace OkPedidos.Core.Services.User
                 if (user == null)
                     return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.UserNotFound);
 
-                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt != null);
+                var companyId = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId && x.DeletedAt == null);
                 if (companyId == null)
                     return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.CompanyNotFound);
 

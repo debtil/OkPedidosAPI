@@ -17,6 +17,7 @@ namespace OkPedidosAPI.Controllers
             _loginService = loginService;
         }
 
+        /// <summary>Realiza o login do usuário com email e senha.</summary>
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<LoginResponse>> Authenticate([FromBody] LoginRequest request)

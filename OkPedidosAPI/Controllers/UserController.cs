@@ -9,7 +9,6 @@ using static OkPedidosAPI.Helpers.Enums;
 namespace OkPedidosAPI.Controllers
 {
     [ApiController]
-    //[ApiExplorerSettings(GroupName = "admin")]
     [Route("admin/v1/users")]
     [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.MANAGER)}")]
     public class UserController : ControllerBase
@@ -33,7 +32,7 @@ namespace OkPedidosAPI.Controllers
 
             var result = await _userService.Create(value);
 
-            return StatusCode(StatusCodes.Status201Created, result);
+            return StatusCode((int)result.StatusCode, result);
         }
 
         /// <summary>Atualiza um usuário.</summary>

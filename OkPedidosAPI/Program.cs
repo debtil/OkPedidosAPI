@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using OkPedidos.Core.Data;
 using OkPedidos.Core.DependencyInjection;
 using OkPedidosAPI;
@@ -43,7 +44,29 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(option =>
+{
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        BearerFormat = "JWT",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Description = "Enter your JWT Access Token",
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    option.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>()   }
+    });
+});
 
 var app = builder.Build();
 
@@ -61,14 +84,7 @@ app.UseSwaggerUI(c =>
 // Redirect root to Swagger UI if requested from `/`
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
-
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.UseAuthentication();
 app.UseAuthorization();
