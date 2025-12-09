@@ -7,6 +7,7 @@ using OkPedidos.Models.DTOs.Request.Company;
 using OkPedidos.Models.DTOs.Response.Company;
 using OkPedidos.Models.DTOs.Response.User;
 using OkPedidos.Models.Models;
+using OkPedidos.Models.Models.Base;
 using OkPedidos.Shared.Constants.Models;
 using OkPedidosAPI;
 using System.Net;
@@ -15,12 +16,13 @@ namespace OkPedidos.Core.Services.Company
 {
     public class CompanyService(OkPedidosDbContext _dbContext) : ICompanyService
     {
-        public async Task<Result<CreateCompanyResponse>> Create(CreateCompanyRequest request)
+        public async Task<Result<CreateCompanyResponse>> Create(CreateCompanyRequest request, IdentityUserModel currentUser)
         {
             try
             {
                 CompanyModel company = request;
                 company.CreatedAt = DateTime.Now;
+                company.CreatedBy = currentUser.UserId;
                 await _dbContext.Companies.AddAsync(company);
                 await _dbContext.SaveChangesAsync();
 
@@ -33,7 +35,7 @@ namespace OkPedidos.Core.Services.Company
             }
         }
 
-        public async Task<Result<CreateCompanyResponse>> Update(int id, CreateCompanyRequest request)
+        public async Task<Result<CreateCompanyResponse>> Update(int id, CreateCompanyRequest request, IdentityUserModel currentUser)
         {
             try
             {
@@ -45,6 +47,7 @@ namespace OkPedidos.Core.Services.Company
                 company.Phone = request.Phone;
 
                 company.UpdatedAt = DateTime.Now;
+                company.UpdatedBy = currentUser.UserId;
 
                 _dbContext.Companies.Update(company);
                 await _dbContext.SaveChangesAsync();
@@ -58,7 +61,7 @@ namespace OkPedidos.Core.Services.Company
             }
         }
 
-        public async Task<Result<CreateCompanyResponse>> Delete(int id)
+        public async Task<Result<CreateCompanyResponse>> Delete(int id, IdentityUserModel currentUser)
         {
             try
             {
@@ -67,6 +70,7 @@ namespace OkPedidos.Core.Services.Company
                     return ResultService.NotFound<CreateCompanyResponse>();
 
                 company.DeletedAt = DateTime.Now;
+                company.DeletedBy = currentUser.UserId;
                 _dbContext.Companies.Update(company);
                 await _dbContext.SaveChangesAsync();
 
@@ -129,8 +133,11 @@ namespace OkPedidos.Core.Services.Company
                          Name = x.Name,
                          Phone = x.Phone,
                          CreatedAt = x.CreatedAt,
+                         CreatedBy = x.CreatedBy,
                          UpdatedAt = x.UpdatedAt,
+                         UpdatedBy = x.UpdatedBy,
                          DeletedAt = x.DeletedAt,
+                         DeletedBy = x.DeletedBy
                      })
                      .ToListAsync();
 
@@ -142,18 +149,18 @@ namespace OkPedidos.Core.Services.Company
             }
         }
 
-        public async Task<Result<List<CreateUserResponse>>> GetCompanyEmployees(int companyId)
+        public async Task<Result<List<CreateUserResponse>>> GetCompanyEmployees(IdentityUserModel currentUser)
         {
             try
             {
                 var companyExists = await _dbContext.Companies
-                    .AnyAsync(c => c.Id == companyId && c.DeletedAt == null);
+                    .AnyAsync(c => c.Id == currentUser.Company && c.DeletedAt == null);
 
                 if (!companyExists)
                     return ResultService.NotFound<List<CreateUserResponse>>();
 
                 var employees = await _dbContext.Set<UserModel>()
-                    .Where(u => u.CompanyId == companyId)
+                    .Where(u => u.CompanyId == currentUser.Company)
                     .Where(u => u.DeletedAt == null)
                     .OrderBy(u => u.Name)
                     .Select(u => new CreateUserResponse
@@ -163,8 +170,11 @@ namespace OkPedidos.Core.Services.Company
                         Email = u.Email,
                         Role = u.Role,
                         CreatedAt = u.CreatedAt,
+                        CreatedBy = u.CreatedBy,
                         UpdatedAt = u.UpdatedAt,
-                        DeletedAt = u.DeletedAt
+                        UpdatedBy = u.UpdatedBy,
+                        DeletedAt = u.DeletedAt,
+                        DeletedBy = u.DeletedBy
                     })
                     .ToListAsync();
 

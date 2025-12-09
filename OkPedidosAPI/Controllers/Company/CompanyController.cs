@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OkPedidos.Core.Result;
+using OkPedidos.Core.Services.Base;
 using OkPedidos.Core.Services.Interfaces;
 using OkPedidos.Models.DTOs.Request.Company;
 using OkPedidos.Models.DTOs.Response.Company;
@@ -9,7 +10,6 @@ using static OkPedidosAPI.Helpers.Enums;
 namespace OkPedidosAPI.Controllers.Company
 {
     [ApiController]
-    //[ApiExplorerSettings(GroupName = "admin")]
     [Route("admin/v1/companies")]
     [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.MANAGER)}")]
     public class CompanyController : ControllerBase
@@ -31,7 +31,9 @@ namespace OkPedidosAPI.Controllers.Company
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _companyService.Create(value);
+            var currentUser = TokenService.GetIdentity(HttpContext);
+
+            var result = await _companyService.Create(value, currentUser);
 
             return StatusCode(StatusCodes.Status201Created, result);
         }
@@ -44,7 +46,9 @@ namespace OkPedidosAPI.Controllers.Company
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _companyService.Update(id, value);
+            var currentUser = TokenService.GetIdentity(HttpContext);
+
+            var result = await _companyService.Update(id, value, currentUser);
             return Ok(result);
         }
 
@@ -71,16 +75,20 @@ namespace OkPedidosAPI.Controllers.Company
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result<CreateCompanyResponse>))]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _companyService.Delete(id);
+            var currentUser = TokenService.GetIdentity(HttpContext);
+
+            var result = await _companyService.Delete(id, currentUser);
             return Ok(result);
         }
 
         /// <summary>Busca os funcionários de uma empresa</summary>
-        [HttpGet("{id:int}/employees")]
+        [HttpGet("employees")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result<CreateCompanyResponse>))]
-        public async Task<IActionResult> Emplyees(int id)
+        public async Task<IActionResult> Emplyees()
         {
-            var result = await _companyService.GetCompanyEmployees(id);
+            var currentUser = TokenService.GetIdentity(HttpContext);
+
+            var result = await _companyService.GetCompanyEmployees(currentUser);
             return Ok(result);
         }
     }
