@@ -15,10 +15,20 @@ namespace OkPedidos.Models.Models.Base
         [JsonPropertyOrder(99990)]
         public DateTime CreatedAt { get; set; }
 
+        [Required]
+        [JsonPropertyOrder(99991)]
+        public int CreatedBy { get; set; }
+
         [JsonPropertyOrder(99992)]
         public DateTime? UpdatedAt { get; set; }
 
+        [JsonPropertyOrder(99993)]
+        public int? UpdatedBy { get; set; }
+
         [JsonPropertyOrder(99994)]
         public DateTime? DeletedAt { get; set; }
+
+        [JsonPropertyOrder(99995)]
+        public int? DeletedBy { get; set; }
     }
 }

@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using OkPedidos.Core.Data;
 using OkPedidos.Core.Result;
 using OkPedidos.Core.Services.Base;
 using OkPedidos.Models.DTOs.Request.User;
 using OkPedidos.Models.DTOs.Response.User;
 using OkPedidos.Shared.Constants.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
+using static OkPedidosAPI.Helpers.Enums;
 
 namespace OkPedidos.Core.Services.User
 {
@@ -43,14 +44,20 @@ namespace OkPedidos.Core.Services.User
 
             var tokenExpiryTimeStamp = DateTime.UtcNow.AddMinutes(tokenValidityMins);
 
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+
+                new Claim(ClaimTypes.Role, ((UserRole)user.Role).ToString()),
+
+                new Claim("userId", user.Id.ToString()),
+                new Claim("userName", user.Name ?? string.Empty),
+                new Claim("companyId", user.CompanyId.ToString()),
+            };
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Email, request.Email),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role.ToString()),
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = tokenExpiryTimeStamp,
                 Issuer = issuer,
                 Audience = audience,

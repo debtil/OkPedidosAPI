@@ -4,7 +4,7 @@ using OkPedidos.Core.Services.User;
 using OkPedidos.Models.DTOs.Request.User;
 using OkPedidos.Models.DTOs.Response.User;
 
-namespace OkPedidosAPI.Controllers
+namespace OkPedidosAPI.Controllers.Login
 {
     [ApiController]
     [Route("v1/login")]

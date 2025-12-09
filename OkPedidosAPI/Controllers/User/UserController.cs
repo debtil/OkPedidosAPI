@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OkPedidos.Core.Result;
+using OkPedidos.Core.Services.Base;
 using OkPedidos.Core.Services.Interfaces;
 using OkPedidos.Models.DTOs.Request.User;
 using OkPedidos.Models.DTOs.Response.User;
 using static OkPedidosAPI.Helpers.Enums;
 
-namespace OkPedidosAPI.Controllers
+namespace OkPedidosAPI.Controllers.User
 {
     [ApiController]
+    //[ApiExplorerSettings(GroupName = "admin")]
     [Route("admin/v1/users")]
     [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.MANAGER)}")]
     public class UserController : ControllerBase
@@ -30,7 +32,9 @@ namespace OkPedidosAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _userService.Create(value);
+            var currentUser = TokenService.GetIdentity(HttpContext);
+
+            var result = await _userService.Create(value, currentUser);
 
             return StatusCode((int)result.StatusCode, result);
         }

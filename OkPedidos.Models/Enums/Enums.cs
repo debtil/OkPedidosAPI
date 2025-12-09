@@ -1,12 +1,19 @@
-﻿namespace OkPedidosAPI.Helpers
+﻿using System.ComponentModel;
+
+namespace OkPedidosAPI.Helpers
 {
     public class Enums
     {
         public enum UserRole
         {
-            ADMIN, 
-            MANAGER,
-            CUSTOMER
+            [Description("Admin")]
+            ADMIN = 1,
+
+            [Description("Manager")]
+            MANAGER = 2,
+
+            [Description("Employee")]
+            EMPLOYEE = 3
         }
 
         public enum ErrorType

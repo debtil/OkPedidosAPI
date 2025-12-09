@@ -34,6 +34,8 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddAuthorization();
 
+builder.Services.AddHttpContextAccessor();
+
 // Add services to the container.
 
 builder.Services.AddCore();

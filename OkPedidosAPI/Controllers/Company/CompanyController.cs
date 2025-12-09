@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OkPedidos.Core.Result;
 using OkPedidos.Core.Services.Interfaces;
 using OkPedidos.Models.DTOs.Request.Company;
 using OkPedidos.Models.DTOs.Response.Company;
+using static OkPedidosAPI.Helpers.Enums;
 
-namespace OkPedidosAPI.Controllers
+namespace OkPedidosAPI.Controllers.Company
 {
     [ApiController]
     //[ApiExplorerSettings(GroupName = "admin")]
     [Route("admin/v1/companies")]
-    //[Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.MANAGER)}")]
+    [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.MANAGER)}")]
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _companyService;

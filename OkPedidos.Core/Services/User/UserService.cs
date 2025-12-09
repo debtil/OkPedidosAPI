@@ -1,19 +1,20 @@
-﻿using OkPedidos.Core.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OkPedidos.Core.Data;
 using OkPedidos.Core.Result;
 using OkPedidos.Core.Services.Base;
 using OkPedidos.Core.Services.Interfaces;
 using OkPedidos.Models.DTOs.Request.User;
 using OkPedidos.Models.DTOs.Response.User;
+using OkPedidos.Models.Models.Base;
 using OkPedidos.Shared.Constants.Models;
 using OkPedidosAPI;
 using System.Net;
-using Microsoft.EntityFrameworkCore;
 
 namespace OkPedidos.Core.Services.User
 {
     public class UserService(OkPedidosDbContext _dbContext) : IUserService
     {
-        public async Task<Result<CreateUserResponse>> Create(CreateUserRequest request)
+        public async Task<Result<CreateUserResponse>> Create(CreateUserRequest request, IdentityUserModel currrentUser)
         {
             try
             {
@@ -28,7 +29,7 @@ namespace OkPedidos.Core.Services.User
 
                 UserModel item = request;
 
-                if(user?.DeletedAt != null)
+                if (user?.DeletedAt != null)
                 {
                     item.Id = user.Id;
                     item.Name = user.Name;
