@@ -37,13 +37,16 @@ namespace OkPedidos.Core.Services.User
                     item.Role = user.Role;
                     item.Password = user.Password;
                     item.UpdatedAt = DateTime.UtcNow;
+                    item.UpdatedBy = currrentUser.UserId;
                     item.DeletedAt = null;
+                    item.DeletedBy = null;
 
                     _dbContext.User.Update(item);
                 }
                 else
                 {
                     item.CreatedAt = DateTime.Now;
+                    item.CreatedBy = currrentUser.UserId;
                     await _dbContext.User.AddAsync(item);
                 }
 
@@ -58,7 +61,7 @@ namespace OkPedidos.Core.Services.User
             }
         }
 
-        public async Task<Result<CreateUserResponse>> Update(int id, CreateUserRequest request)
+        public async Task<Result<CreateUserResponse>> Update(int id, CreateUserRequest request, IdentityUserModel currrentUser)
         {
             try
             {
@@ -77,6 +80,7 @@ namespace OkPedidos.Core.Services.User
                 user.CompanyId = request.CompanyId;
 
                 user.UpdatedAt = DateTime.Now;
+                user.UpdatedBy = currrentUser.UserId;
 
                 _dbContext.User.Update(user);
                 await _dbContext.SaveChangesAsync();
@@ -90,7 +94,7 @@ namespace OkPedidos.Core.Services.User
             }
         }
 
-        public async Task<Result<CreateUserResponse>> Delete(int id)
+        public async Task<Result<CreateUserResponse>> Delete(int id, IdentityUserModel currrentUser)
         {
             try
             {
@@ -99,6 +103,7 @@ namespace OkPedidos.Core.Services.User
                     return ResultService.OK<CreateUserResponse>(HttpStatusCode.BadRequest, ErrorMessage.UserNotFound);
 
                 user.DeletedAt = DateTime.Now;
+                user.DeletedBy = currrentUser.UserId;
                 _dbContext.User.Update(user);
                 await _dbContext.SaveChangesAsync();
 
@@ -163,8 +168,11 @@ namespace OkPedidos.Core.Services.User
                         Role = x.Role,
                         CompanyId = x.CompanyId,
                         CreatedAt = x.CreatedAt,
+                        CreatedBy = x.CreatedBy,
                         UpdatedAt = x.UpdatedAt,
+                        UpdatedBy = x.UpdatedBy,
                         DeletedAt = x.DeletedAt,
+                        DeletedBy = x.DeletedBy
                      })
                      .ToListAsync();
 

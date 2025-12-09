@@ -10,7 +10,6 @@ using static OkPedidosAPI.Helpers.Enums;
 namespace OkPedidosAPI.Controllers.User
 {
     [ApiController]
-    //[ApiExplorerSettings(GroupName = "admin")]
     [Route("admin/v1/users")]
     [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.MANAGER)}")]
     public class UserController : ControllerBase
@@ -47,7 +46,9 @@ namespace OkPedidosAPI.Controllers.User
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _userService.Update(id, value);
+            var currentUser = TokenService.GetIdentity(HttpContext);
+
+            var result = await _userService.Update(id, value, currentUser);
             return Ok(result);
         }
 
@@ -74,7 +75,9 @@ namespace OkPedidosAPI.Controllers.User
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result<CreateUserResponse>))]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _userService.Delete(id);
+            var currentUser = TokenService.GetIdentity(HttpContext);
+
+            var result = await _userService.Delete(id, currentUser);
             return Ok(result);
         }
     }
