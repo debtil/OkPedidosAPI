@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OkPedidos.Core.Data;
@@ -11,9 +12,11 @@ using OkPedidos.Core.Data;
 namespace OkPedidos.Core.Migrations
 {
     [DbContext(typeof(OkPedidosDbContext))]
-    partial class OkPedidosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251209030930_AjustaBaseModel")]
+    partial class AjustaBaseModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
